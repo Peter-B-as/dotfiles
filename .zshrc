@@ -21,3 +21,4 @@ alias vpn-mull='echo "🕵️ Switching to Mullvad mode..." && sudo tailscale do
 
 # ステータス確認
 alias vpn-status='echo "--- Tailscale ---"; tailscale status; echo ""; echo "--- Mullvad ---"; mullvad status'
+#Comment add
