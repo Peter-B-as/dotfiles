@@ -29,3 +29,22 @@ alias vim="nvim"
 #dotfile
 alias dot="cd ~/dotfiles"
 alias dotpush="cd ~/dotfiles && git add . && git commit -m 'Update dotfiles' && git push"
+
+
+# 「最強のドットファイル更新コマンド」
+function dotup() {
+    echo "📦 パッケージリストを更新中..."
+    # 今入っているアプリ一覧を最新化して保存
+    pacman -Qqe > ~/dotfiles/pkglist.txt
+    
+    echo "🚀 GitHubへ送信中..."
+    cd ~/dotfiles
+    git add .
+    
+    # コミットメッセージに日付を入れる（これで見返しやすくなる！）
+    git commit -m "Update: $(date '+%Y-%m-%d %H:%M')"
+    
+    git push
+    
+    echo "✅ 完了！今日もいい仕事したね！"
+}
