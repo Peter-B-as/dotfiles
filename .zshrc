@@ -25,3 +25,7 @@ alias vpn-status='echo "--- Tailscale ---"; tailscale status; echo ""; echo "---
 #editor set
 alias vi="nvim"
 alias vim="nvim"
+
+#dotfile
+alias dot="cd ~/dotfiles"
+alias dotpush="cd ~/dotfiles && git add . && git commit -m 'Update dotfiles' && git push"
