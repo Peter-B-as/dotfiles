@@ -1,5 +1,5 @@
 ---
-- name: Project Resurrection: Ultimate Arch Setup (Spider-Edition)
+- name: "Project Resurrection: Ultimate Arch Setup (Spider-Edition)"
   hosts: localhost
   connection: local
   become: yes  # 基本はroot権限
@@ -29,7 +29,7 @@
           - syncthing
         state: present
 
-    # ======================================================
+    # =====================================================
     # Phase 2: AURヘルパー "Yay" の召喚
     # ======================================================
     - name: 🕷️ Yayの存在確認

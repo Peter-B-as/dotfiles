@@ -1,3 +1,4 @@
+ansible
 baobab
 base
 base-devel
@@ -64,6 +65,7 @@ gnome-tweaks
 gnome-user-docs
 gnome-user-share
 gnome-weather
+go
 google-chrome
 grilo-plugins
 grub
@@ -79,11 +81,13 @@ gvfs-onedrive
 gvfs-smb
 gvfs-wsdd
 intel-media-driver
+intel-ucode
 keepassxc
 lightsoff
 linux
 linux-firmware
 loupe
+lvm2
 malcontent
 manuals
 mesa
@@ -94,6 +98,7 @@ neovim
 networkmanager
 noto-fonts
 noto-fonts-cjk
+openssh
 orca
 pacman-contrib
 papers
@@ -118,6 +123,7 @@ ttf-fira-code
 ttf-jetbrains-mono
 ttf-meslo-nerd-font-powerlevel10k
 ufw
+vim
 visual-studio-code-bin
 vulkan-intel
 xclip
