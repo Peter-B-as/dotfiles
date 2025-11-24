@@ -1,42 +1,44 @@
 ---
-- name: Operation: Spider-Verse Restore (Arch Linux Setup)
+- name: Project Resurrection: Ultimate Arch Setup (Spider-Edition)
   hosts: localhost
   connection: local
-  become: yes  # 基本的にsudo権限で動くよ
+  become: yes  # 基本はroot権限
 
   vars:
-    # ▼ ここを自分のユーザー名に変えてね！
+    # ▼ 自分のユーザー名
     target_user: peter
-    # ドットファイルの場所
     dotfiles_dir: "/home/{{ target_user }}/dotfiles"
 
   tasks:
     # ======================================================
-    # Phase 1: システムの基礎工事 (System Update)
+    # Phase 1: ベースシステムの強化
     # ======================================================
-    - name: 🕷️ パッケージデータベースの更新とシステムアップグレード
+    - name: 🕷️ システム全体の更新 (pacman -Syu)
       pacman:
         update_cache: yes
         upgrade: yes
 
-    - name: 🕷️ ビルドに必要なベースツールを入れる
+    - name: 🕷️ 必須ツールとSyncthingのインストール
       pacman:
         name:
           - base-devel
           - git
           - ansible
+          - neovim
+          - zsh
+          - syncthing
         state: present
 
     # ======================================================
-    # Phase 2: AURヘルパー "Yay" の導入 (ちょっと特殊)
+    # Phase 2: AURヘルパー "Yay" の召喚
     # ======================================================
-    - name: 🕷️ Yayがインストールされているか確認
+    - name: 🕷️ Yayの存在確認
       command: which yay
       register: yay_check
       ignore_errors: yes
       changed_when: false
 
-    - name: 🕷️ Yayをビルドしてインストール (ない場合のみ)
+    - name: 🕷️ Yayをビルド＆インストール (存在しない場合のみ)
       block:
         - name: Yayのリポジトリをクローン
           git:
@@ -44,63 +46,101 @@
             dest: "/home/{{ target_user }}/yay-temp"
             version: master
           become: yes
-          become_user: "{{ target_user }}" # ここはユーザー権限でやる（makepkgのため）
+          become_user: "{{ target_user }}"
 
-        - name: Yayをビルド＆インストール
+        - name: ビルド実行
           command: "makepkg -si --noconfirm"
           args:
             chdir: "/home/{{ target_user }}/yay-temp"
           become: yes
           become_user: "{{ target_user }}"
 
-        - name: 一時フォルダをお掃除
+        - name: お掃除
           file:
             path: "/home/{{ target_user }}/yay-temp"
             state: absent
       when: yay_check.rc != 0
 
     # ======================================================
-    # Phase 3: アプリケーションの一括インストール
+    # Phase 3: アプリケーション一括インストール (君の改良版！)
     # ======================================================
-    - name: 🕷️ pkglist.txt からアプリを一括インストール
-      # リスト内のパッケージをループで回す
-      pacman:
-        name: "{{ item }}"
-        state: present
-      # pkglist.txtを行ごとに読み込む
-      loop: "{{ lookup('file', dotfiles_dir + '/pkglist.txt').splitlines() }}"
-      ignore_errors: yes # 万が一リストに変な名前があっても止まらないようにする
+    - name: 🕷️ pkglist.txt を読み込む
+      set_fact:
+        pkg_list: "{{ lookup('file', dotfiles_dir + '/pkglist.txt').splitlines() }}"
 
+    # ★ここが重要！Yay実行前にsudoの認証情報を更新しておく
+    # Yayはユーザー権限で動くが、内部でsudoを叩くため、パスワードを聞かれると止まってしまう
+    # このタスクでsudoのタイマーをリフレッシュしておく
+    - name: 🕷️ Sudo権限のリフレッシュ
+      command: sudo -v
+      become: yes
+      become_user: "{{ target_user }}"
+
+    - name: 🕷️ 全パッケージを一括インストール (Yayを使用)
+      # --answerdiff=None 等を追加して、Diff確認の停止を徹底
+      command: "yay -S --noconfirm --needed --answerdiff=None --answerclean=None {{ pkg_list | join(' ') }}"
+      become: yes
+      become_user: "{{ target_user }}"
+      async: 3600
+      poll: 30
     # ======================================================
-    # Phase 4: ドットファイルのリンク (Web-Shooter Link)
+    # Phase 4: ドットファイルのリンク接続
     # ======================================================
+    - name: 🕷️ Config用の親ディレクトリを作成
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ target_user }}"
+        group: "{{ target_user }}"
+      loop:
+        - "/home/{{ target_user }}/.config/gh"
+        - "/home/{{ target_user }}/.config/keepassxc"
+        - "/home/{{ target_user }}/.config/nvim"
+
     - name: 🕷️ 設定ファイルのシンボリックリンクを作成
       file:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         state: link
-        force: yes # すでにあるファイルは上書き（バックアップではないので注意）
+        force: yes
+        owner: "{{ target_user }}"
+        group: "{{ target_user }}"
       loop:
-        # ▼ ここにリンクしたいものをリストアップしていく
         - { src: "{{ dotfiles_dir }}/.zshrc", dest: "/home/{{ target_user }}/.zshrc" }
         - { src: "{{ dotfiles_dir }}/.p10k.zsh", dest: "/home/{{ target_user }}/.p10k.zsh" }
         - { src: "{{ dotfiles_dir }}/.gitconfig", dest: "/home/{{ target_user }}/.gitconfig" }
-        # ディレクトリごとのリンク
-        - { src: "{{ dotfiles_dir }}/.config/nvim", dest: "/home/{{ target_user }}/.config/nvim" }
         - { src: "{{ dotfiles_dir }}/.config/fcitx5", dest: "/home/{{ target_user }}/.config/fcitx5" }
+        - { src: "{{ dotfiles_dir }}/.config/nvim", dest: "/home/{{ target_user }}/.config/nvim" }
         - { src: "{{ dotfiles_dir }}/.config/gh/config.yml", dest: "/home/{{ target_user }}/.config/gh/config.yml" }
-        # 必要ならここに行を追加していけばいい
-      become: yes
-      become_user: "{{ target_user }}" # リンクはユーザー権限で作る！
+        - { src: "{{ dotfiles_dir }}/.config/keepassxc/keepassxc.ini", dest: "/home/{{ target_user }}/.config/keepassxc/keepassxc.ini" }
 
     # ======================================================
-    # Phase 5: 仕上げ (Final Polish)
+    # Phase 5: サービスの起動 & 仕上げ (UID修正版)
     # ======================================================
-    - name: 🕷️ ログインシェルをZshに変更
+    
+    # 【NEW!】確実にターゲットユーザーのUIDを取得する
+    - name: 🕷️ ユーザーID (UID) を取得
+      command: "id -u {{ target_user }}"
+      register: target_uid
+      changed_when: false
+
+    - name: 🕷️ デフォルトシェルをZshに変更
       user:
         name: "{{ target_user }}"
         shell: /bin/zsh
 
+    - name: 🕷️ Syncthingサービスを有効化 (ユーザーレベル)
+      systemd:
+        name: syncthing
+        scope: user
+        state: started
+        enabled: yes
+      become: yes
+      become_user: "{{ target_user }}"
+      environment:
+        # 取得したUIDをここで使う！
+        XDG_RUNTIME_DIR: "/run/user/{{ target_uid.stdout }}"
+
     - name: 🕷️ 完了メッセージ
       debug:
-        msg: "Mission Accomplished! スパイダー・パソコンの構築完了。再起動してね！"
+        msg: "Mission Accomplished! 🕷️ Arch環境の完全復活を確認。Good job, Spidey!"
