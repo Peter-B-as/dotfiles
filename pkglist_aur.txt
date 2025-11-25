@@ -1,0 +1,11 @@
+blackbox-terminal-git
+blackbox-terminal-git-debug
+cyrus-sasl-xoauth2-git
+cyrus-sasl-xoauth2-git-debug
+google-chrome
+mullvad-vpn-bin
+mullvad-vpn-bin-debug
+ttf-meslo-nerd-font-powerlevel10k
+visual-studio-code-bin
+yay
+yay-debug
