@@ -35,8 +35,8 @@ alias dotpush="cd ~/dotfiles && git add . && git commit -m 'Update dotfiles' && 
 function dotup() {
     echo "📦 パッケージリストを更新中..."
     # 今入っているアプリ一覧を最新化して保存
-    pacman -Qqe > ~/dotfiles/pkglist.txt
-    
+    pacman -Qqe > pkglist_native.txt
+    pacman -Qqm > pkglist_aur.txt
     echo "🚀 GitHubへ送信中..."
     cd ~/dotfiles
     git add .
