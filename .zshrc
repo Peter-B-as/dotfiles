@@ -52,4 +52,4 @@ function dotup() {
 alias mail-r="mbsync -a"
 
 alias mail="neomutt"
-
+alias fullbackup='sudo /home/peter/wk/backup.sh'

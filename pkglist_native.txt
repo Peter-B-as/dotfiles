@@ -134,6 +134,7 @@ tlp-rdw
 ttf-fira-code
 ttf-jetbrains-mono
 ttf-meslo-nerd-font-powerlevel10k
+udiskie
 ufw
 vim
 visual-studio-code-bin
