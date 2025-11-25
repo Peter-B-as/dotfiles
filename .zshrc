@@ -48,3 +48,8 @@ function dotup() {
     
     echo "✅ 完了！今日もいい仕事したね！"
 }
+
+alias mail-r="mbsync -a"
+
+alias mail="neomutt"
+
