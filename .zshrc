@@ -51,7 +51,7 @@ function dotup() {
 
 alias mail-r="mbsync -a"
 alias mail="neomutt"
-alias fullbackup='sudo /home/peter/wk/backup.sh'
+alias fullbackup='sudo /home/peter/wk/backup.sh && dotup'
 
 
 
@@ -61,3 +61,5 @@ if [ ! -S ~/.ssh/ssh_auth_sock ]; then
   eval "$(ssh-agent | grep -v 'Agent pid')"
   ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
 fi
+
+
