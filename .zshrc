@@ -10,7 +10,7 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-eval "$(starship init zsh)"
+#eval "$(starship init zsh)"
 # --- Peter Parker's VPN Switcher (Laptop Ver.) ---
 
 # Tailscale モード（自宅鯖へのアクセス・同期用）
@@ -50,6 +50,14 @@ function dotup() {
 }
 
 alias mail-r="mbsync -a"
-
 alias mail="neomutt"
 alias fullbackup='sudo /home/peter/wk/backup.sh'
+
+
+
+# SSH Agentの自動起動設定
+if [ ! -S ~/.ssh/ssh_auth_sock ]; then
+  # エラー回避: grepで "Agent pid" の出力行を除外して実行
+  eval "$(ssh-agent | grep -v 'Agent pid')"
+  ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+fi
