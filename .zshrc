@@ -50,7 +50,7 @@ function dotup() {
 }
 
 alias mail-r="mbsync -a"
-alias mail="neomutt"
+alias mail="mail-r && neomutt"
 alias fullbackup='sudo /home/peter/wk/backup.sh && dotup'
 
 
@@ -62,4 +62,4 @@ if [ ! -S ~/.ssh/ssh_auth_sock ]; then
   ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
 fi
 
-
+alias gpu='nvtop -d 0.25'

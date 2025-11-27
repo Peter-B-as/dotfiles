@@ -109,6 +109,7 @@ networkmanager
 notmuch
 noto-fonts
 noto-fonts-cjk
+nvtop
 openssh
 orca
 pacman-contrib
