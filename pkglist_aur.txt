@@ -1,5 +1,7 @@
 blackbox-terminal-git
 blackbox-terminal-git-debug
+ccze
+ccze-debug
 cyrus-sasl-xoauth2-git
 cyrus-sasl-xoauth2-git-debug
 google-chrome

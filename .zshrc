@@ -55,11 +55,25 @@ alias fullbackup='sudo /home/peter/wk/backup.sh && dotup'
 
 
 
+# --- Peter Parker's VPN Switcher (Laptop Ver.) ---
+# (中略) ... backup.sh && dotup' の下あたり
+
 # SSH Agentの自動起動設定
-if [ ! -S ~/.ssh/ssh_auth_sock ]; then
-  # エラー回避: grepで "Agent pid" の出力行を除外して実行
-  eval "$(ssh-agent | grep -v 'Agent pid')"
+# 常に固定のパスを環境変数にセットする
+export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+
+# まだエージェントが動いていない（ソケットがない）時だけ起動する
+if [ ! -S "$SSH_AUTH_SOCK" ]; then
+  eval "$(ssh-agent -s)" > /dev/null
+  # 生成されたソケットを固定パスにシンボリックリンクする
   ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
 fi
 
 alias gpu='nvtop -d 0.25'
+
+# passコマンドは単にKeePassXCを呼ぶだけでOK（環境変数は上でセット済みだから）
+# バックグラウンド実行(&)にしてターミナルを占有させない
+alias pass="keepassxc > /dev/null 2>&1 &"
+
+# Spider-Sense: Show system warnings and errors in real-time
+alias sense='journalctl -f -p 4 -o cat | ccze -A'
