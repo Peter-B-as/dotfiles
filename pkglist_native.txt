@@ -116,6 +116,7 @@ orca
 pacman-contrib
 papers
 pass
+pyenv
 python-gnupg
 quadrapassel
 reflector
@@ -132,6 +133,7 @@ sysprof
 tailscale
 tecla
 timeshift
+tk
 tlp
 tlp-rdw
 tmux
@@ -141,6 +143,7 @@ ttf-jetbrains-mono-nerd
 ttf-meslo-nerd-font-powerlevel10k
 udiskie
 ufw
+uv
 vim
 visual-studio-code-bin
 vulkan-intel
@@ -189,7 +192,6 @@ xorg-xwininfo
 xorg-xwud
 xterm
 yay
-yay-debug
 yelp
 zsh
 zsh-autosuggestions
