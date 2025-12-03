@@ -77,3 +77,4 @@ alias pass="keepassxc > /dev/null 2>&1 &"
 
 # Spider-Sense: Show system warnings and errors in real-time
 alias sense='journalctl -f -p 4 -o cat | ccze -A'
+eval "$(direnv hook zsh)"

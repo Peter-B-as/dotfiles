@@ -12,6 +12,7 @@ cyrus-sasl-xoauth2-git
 d-spy
 dconf-editor
 decibels
+direnv
 dmenu
 efibootmgr
 endeavour
